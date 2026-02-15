@@ -2,10 +2,11 @@ import { fetchNotes } from "@/lib/api";
 import NotesClient from "./Notes.client";
 
 interface PageProps {
-  searchParams: {
-    search?: string;
-    page?: string;
-  };
+    searchParams: Promise<
+        {
+            search?: string;
+            page?: string;
+        }>;
 }
 
 import {
@@ -27,23 +28,10 @@ export default async function Notes({ searchParams }: PageProps) {
         queryFn: () => fetchNotes({ search, page, perPage }),
     });
 
-// const {data, isLoading, isError, isSuccess} =  useQuery({
-//     queryKey: ["notes", query, currentPage, perPage],
-//     queryFn: () => fetchNotes(
-//       {search: query, page: currentPage, perPage}),
-//       placeholderData: keepPreviousData,
-//   });
- 
-
-
-
 return (
     <>
         <HydrationBoundary state={dehydrate(queryClient)}>
-           
-	
                 <NotesClient />
-           
       </HydrationBoundary>    </>
 )
 }

@@ -1,6 +1,6 @@
 'use client';
 import { fetchNotes } from '@/lib/api';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import css from './NotesPage.module.css';
 import { useState } from "react";
 import SearchBox from "@/components/SearchBox/SearchBox";
@@ -28,7 +28,8 @@ setCurrentPage(1);
     const { data, isLoading, error, isSuccess } = useQuery({
         queryKey: ["notes", { search: query, page: currentPage, perPage }],
         queryFn: () => fetchNotes(
-        { search: query, page: currentPage, perPage }), 
+            { search: query, page: currentPage, perPage }), 
+        placeholderData: keepPreviousData,
         refetchOnMount: false,
     });
     
@@ -51,10 +52,9 @@ setCurrentPage(1);
 )}
 </header>
   {isLoading && <Loading/>}
-  {error && <Error error={error}/>}
+                {error && <Error error={error} />}
+                 {data && isSuccess && data.notes.length > 0 && <NoteList notes={data.notes}/>}
              </div>
-            	
-            {data && isSuccess && data.notes.length > 0 && <NoteList notes={data.notes}/>}
         </>
     )
     }
